@@ -1,19 +1,8 @@
-let meta = {
-    value: `Ler um livro por mês`,
-    checked: true,
-};
+const start = () => {
 
-let metas = [
-    meta,
-    {
-        value: `Estudar por 30 minutos`,
-        checked: false
+    while (true) {
+        console.log();
+        return; // Finaliza
     }
-];
-
-console.log(metas); 
-
-
-const createMeta = () => {
 
 }
