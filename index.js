@@ -26,21 +26,23 @@ const listMeta = async () => {
         choices: [...metas], // ... = "Duplicar os dados de Metas, sem alteração no inicial"
     });
 
-    if(answers.length == 0) {
+    if (answers.length == 0) {
         console.log('Você não marcou nenhuma meta.');
         return;
-    }
+    };
 
-    answers.forEach((m) => {
+    // Desmarcando todas as metas, para evitar erros
+    metas.forEach((m) => {
         m.checked = false;
-    })
+    });
 
+    // Marcando as metas escolhidas pelo usuário
     answers.forEach((answer) => {
         const meta = metas.find((m) => {
             return m.value === answer;
         });
         meta.checked = true;
-    })
+    });
 }
 
 // async - Precisa esperar ?
