@@ -78,6 +78,14 @@ const pendingMeta = async () => {
     });
 }
 
+const deleteMeta = async () => {
+
+    const deleteMeta = await select({
+        message: 'Escolha a meta que deseja excluir',
+        choices: [...metas] // spread operator (...)
+    });
+}
+
 // async - Precisa esperar ?
 const start = async () => {
 
@@ -104,6 +112,10 @@ const start = async () => {
                     value: 'pendentes' // Valor que será utilizado no case
                 },
                 {
+                    name: 'Deletar Metas',
+                    value: 'deletar' // Valor que será utilizado no case
+                },
+                {
                     name: 'Sair',
                     value: 'sair' // Valor que será utilizado no case
                 },
@@ -123,6 +135,9 @@ const start = async () => {
                 break;
             case 'pendentes':
                 pendingMeta();
+                break;
+            case 'deletar':
+                deleteMeta();
                 break;
             case 'sair':
                 console.log('Aguardamos seu retorno...')
