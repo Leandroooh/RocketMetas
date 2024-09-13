@@ -1,9 +1,8 @@
 // Desestruturação e Importação de módulos
 const { select, input, checkbox } = require('@inquirer/prompts');
 
-let message = '';
-
 let metas = [];
+let message = '';
 
 const createMeta = async () => {
     const meta = await input({ message: "Digite sua meta!" });
@@ -77,32 +76,38 @@ const pendingMeta = async () => {
 
     await select({
         message: 'Metas Pendentes',
-        choices: [...pending] // spread operator (...)
+        // spread operator (...)
+        choices: [...pending]
     });
 
 }
 
 const deleteMeta = async () => {
 
+    if (metas.length == 0) {
+        console.log('Você não possui nenhuma meta cadastrada.');
+        return;
+    }
+
     // desmarcando as metas, formatando o objeto.
     const selectedMetas = metas.map((m) => {
         return { value: m.value, checked: false };
     })
 
-    const deleteItems = await checkbox({
-        message: 'Use as setas para se movimentar entre as metas, o espaço para marcar e/ou desmarcar e o enter para finalizar a meta',
-        // ... = "Duplicar os dados de Metas, sem alteração no inicial"
+    const deletedMeta = await checkbox({
+        message: "Selecione item para deletar",
         choices: [...selectedMetas],
-    });
+        instructions: false,
+    })
 
-    if (deleteItems.length == 0) {
-        console.log('Você não marcou nenhuma meta para deletar.');
+    if (deletedMeta.length == 0) {
+        console.log('N/A Items para deletar');
         return;
     }
 
-    deleteItems.forEach((item) => {
+    deletedMeta.forEach((item) => {
         // se verdadeiro passa e fica na lista do filtro
-        metas.filter((m) => {
+        metas = metas.filter((m) => {
             // Andar ( Metas ) é diferente de andar (selecionado)? Deleta.
             return m.value != item;
         })
@@ -111,10 +116,6 @@ const deleteMeta = async () => {
     console.log(`Meta(s) deletada(s) com sucesso!`)
 
 }
-
-const createMessage = ({
-    c
-});
 
 // async - Precisa esperar ?
 const start = async () => {
@@ -161,13 +162,13 @@ const start = async () => {
                 await listMeta();
                 break;
             case 'realizadas':
-                performedMeta();
+                await performedMeta();
                 break;
             case 'pendentes':
-                pendingMeta();
+                await pendingMeta();
                 break;
             case 'deletar':
-                deleteMeta();
+                await deleteMeta();
                 break;
             case 'sair':
                 console.log('Aguardamos seu retorno...')
