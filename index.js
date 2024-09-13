@@ -1,24 +1,25 @@
 // Desestruturação e Importação de módulos
 const { select, input, checkbox } = require('@inquirer/prompts');
+const fs = require('fs').promises();
 
 let metas = [];
-let message = '';
+let customMessage = 'Bem-Vindo(a) ao RocketMetas!';
 
 const createMeta = async () => {
     const meta = await input({ message: "Digite sua meta!" });
 
     if (meta.length == 0) {
-        console.log('Você não digitou nenhuma meta.');
+        customMessage = 'Você não informou nenhuma meta para cadastrar.'
         return;
     };
 
     metas.push({ value: meta, checked: false });
-    console.log(`Meta cadastrada com sucesso: ${meta}`);
+    customMessage = `Meta cadastrada com sucesso: ${meta}`;
 };
 
 const listMeta = async () => {
     if (metas.length == 0) {
-        console.log('Você não possui nenhuma meta cadastrada.');
+        customMessage = 'Você não possui nenhuma meta cadastrada.';
         return;
     };
 
@@ -33,7 +34,7 @@ const listMeta = async () => {
     });
 
     if (answers.length == 0) {
-        console.log('Você não marcou nenhuma meta.');
+        customMessage = 'Você não marcou nenhuma meta.';
         return;
     };
 
@@ -48,12 +49,13 @@ const listMeta = async () => {
 }
 
 const performedMeta = async () => {
+
     const completed = metas.filter((m) => {
         return true;
     });
 
     if (completed.length == 0) {
-        console.log('Não existem metas disponíveis! 😒');
+        customMessage = 'Não existem metas disponíveis! :c';
         return;
     }
 
@@ -70,7 +72,7 @@ const pendingMeta = async () => {
     });
 
     if (pending.length == 0) {
-        console.log('Não existem metas pendentes!');
+        customMessage = 'Não existem metas pendentes!';
         return;
     }
 
@@ -85,7 +87,7 @@ const pendingMeta = async () => {
 const deleteMeta = async () => {
 
     if (metas.length == 0) {
-        console.log('Você não possui nenhuma meta cadastrada.');
+        customMessage = 'Você não possui nenhuma meta cadastrada.';
         return;
     }
 
@@ -101,7 +103,7 @@ const deleteMeta = async () => {
     })
 
     if (deletedMeta.length == 0) {
-        console.log('N/A Items para deletar');
+        customMessage = 'N/A Items para deletar';
         return;
     }
 
@@ -113,14 +115,28 @@ const deleteMeta = async () => {
         })
     })
 
-    console.log(`Meta(s) deletada(s) com sucesso!`)
+    customMessage = `Meta(s) deletada(s) com sucesso!`
 
+}
+
+const sendMessage = () => {
+    console.clear();
+
+    if (customMessage != '') {
+
+        console.log('')
+        console.log(customMessage)
+        console.log('')
+
+        customMessage = '';
+    }
 }
 
 // async - Precisa esperar ?
 const start = async () => {
 
     while (true) {
+        sendMessage();
 
         // await - Espere
         const option = await select({
@@ -171,7 +187,7 @@ const start = async () => {
                 await deleteMeta();
                 break;
             case 'sair':
-                console.log('Aguardamos seu retorno...')
+                console.log('Aguardamos seu retorno...');
                 return;
         }
 
