@@ -1,9 +1,28 @@
 // Desestruturação e Importação de módulos
 const { select, input, checkbox } = require('@inquirer/prompts');
-const fs = require('fs').promises();
+const fs = require('fs').promises;
 
 let metas = [];
 let customMessage = 'Bem-Vindo(a) ao RocketMetas!';
+
+const loadMetas = async () => {
+
+    try {
+        // lendo o arquivo
+        const data = await fs.readFile('metas.json', 'utf-8');
+        // Convertendo os dados de JSON para Array; 
+        metas = JSON.parse(data);
+    } catch (error) {
+        metas = [];
+        console.error('Erro ao carregar metas:', error.message);
+    }
+}
+
+const saveMetas = async () => {
+    // transformando o metas em uma string
+    // null & 2 para configuração do JSON.
+    await fs.writeFile('metas.json', JSON.stringify(metas, null, 2));
+}
 
 const createMeta = async () => {
     const meta = await input({ message: "Digite sua meta!" });
@@ -134,9 +153,11 @@ const sendMessage = () => {
 
 // async - Precisa esperar ?
 const start = async () => {
-
+    await loadMetas();
+    
     while (true) {
         sendMessage();
+        await saveMetas();
 
         // await - Espere
         const option = await select({
